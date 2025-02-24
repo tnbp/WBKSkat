@@ -1,5 +1,7 @@
 package wbkskat;
 
+import java.util.ArrayList;
+
 /* 
 	Die Spielart-Klasse enthält die Informationen darüber, welche
 	Spielart gespielt wird: Farbspiel, Grand oder Null; bei einem
@@ -48,6 +50,26 @@ public class Spielart {
 			Wichtig: k1 ist die zuerst gespielte Karte und bestimmt,
 			in welcher Farbe überstochen werden muss.
 		*/
-		return k1; // TODO: dringend verändern!
+        // Zunächst: Prüfe, ob Trumpfkarten gespielt wurden.
+        ArrayList<Karte> truempfe = new ArrayList<Karte>();
+        Karte hoechsterStich;
+        if (istTrumpf(k1)) truempfe.add(k1);
+        if (istTrumpf(k2)) truempfe.add(k2);
+        if (istTrumpf(k3)) truempfe.add(k3);
+        if (!truempfe.isEmpty()) {
+            hoechsterStich = truempfe.get(0);
+            for (int i = 1; i < truempfe.size(); i++) {
+                if (truempfe.get(i).vergleicheTruempfe(hoechsterStich, this) < 0) {
+                    hoechsterStich = truempfe.get(i);
+                }
+            }
+            return hoechsterStich;
+        }
+
+        // Falls keine Trumpfkarten gespielt wurden, werden die Karten der angespielten Farbe verglichen.
+        hoechsterStich = k1;
+        if (k2.getFarbe() == k1.getFarbe() && k2.vergleicheWert(hoechsterStich, this) < 0) hoechsterStich = k2;
+        if (k3.getFarbe() == k1.getFarbe() && k3.vergleicheWert(hoechsterStich, this) < 0) hoechsterStich = k3;
+        return hoechsterStich;
 	}
 }
