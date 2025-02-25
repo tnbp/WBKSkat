@@ -1,4 +1,4 @@
-package src;
+package wbkskat;
 
 public enum Kartenwert {
     SIEBEN(0,0), ACHT(1,1), NEUN(2,2), ZEHN(3,6), BUBE(4,3), DAME(5,4), KOENIG(6,5), ASS(7,7);
