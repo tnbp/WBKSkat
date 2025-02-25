@@ -57,19 +57,19 @@ public class Hand {
 			}
 			// kein Trumpf; ordne in einen Farbstapel ein
 			switch (this.karten.get(i).getFarbe()) {
-				case 0:
+				case KARO:
 				karo.add(this.karten.get(i));
 				break;
 
-				case 1:
+				case HERZ:
 				herz.add(this.karten.get(i));
 				break;
 
-				case 2:
+				case PIK:
 				pik.add(this.karten.get(i));
 				break;
 				
-				case 3:
+				case KREUZ:
 				kreuz.add(this.karten.get(i));
 				break;
 			}
