@@ -6,7 +6,7 @@ import java.util.ArrayList;
 	Die Hand-Klasse modelliert eine Spieler-Hand, die alle Karten eines Spielers aufnimmt.
 	Im Normalfall sind das bis zu 10 Karten, die übersichtlich geordnet sein sollten:
 	Trümpfe links, dann nach Farbe geordnet (Kreuz > Pik > Herz > Karo); innerhalb der
-	Farben absteigend nach Wert.
+	Farben absteigend nach Wert. Test.
 	Anders als beim Stapel können Karten auch hinzugefügt werden.
 	Nach dem Aufnehmen des Skats enthält die Hand kurzzeitig 12 Karten.
 */
