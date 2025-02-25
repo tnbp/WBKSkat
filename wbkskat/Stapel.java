@@ -17,8 +17,8 @@ public class Stapel {
 	
 	public Stapel() {
 		karten = new ArrayList<Karte>();
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 8; j++) {
+		for (Kartenfarbe i : Kartenfarbe.values()) {
+			for (Kartenwert j : Kartenwert.values()) {
 				karten.add(new Karte(j, i));
 			}
 		}

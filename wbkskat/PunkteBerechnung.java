@@ -30,3 +30,4 @@ public class PunkteBerechnung {
             return 0;   // Sieben, Acht und Neun geben 0 Punkte
         }
     }
+}
