@@ -17,7 +17,11 @@ public class Hand {
 	
 	public Hand() {
 		// die Hand enthält zu Beginn noch keine Karten
-		karten = new ArrayList<Karte>();
+		this.karten = new ArrayList<Karte>();
+	}
+	
+	public ArrayList<Karte> getKarten() {
+		return this.karten;
 	}
 	
 	public void fuegeHinzu(Karte k) {
