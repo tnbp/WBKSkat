@@ -1,4 +1,4 @@
-package SKAT;
+package wbkskat;
 
 public class PunkteBerechnung {
 
@@ -17,9 +17,9 @@ public class PunkteBerechnung {
 	                punkte += 4;   // König gibt 4 Punkte
 	            } else if (kartenWert == 4) {
 	                punkte += 3;   // Dame gibt 3 Punkte
-	            } else if (kartenWert == 8) {
+	            } else if (kartenWert == 3) {
 	                punkte += 2;   // Bube gibt 2 Punkte
-	            } else if (kartenWert == 3 || kartenWert == 2 || kartenWert == 1) {
+	            } else if (kartenWert == 0 || kartenWert == 1 || kartenWert == 2) {
 	                punkte += 0;   // 9, 8, 7 gibt 0 Punkte
 	            }
 	        }
