@@ -7,6 +7,7 @@ public class PunkteBerechnung {
 
         // Schleife, die jede Karte im Stich durchgeht
         for (int i = 0; i < stiche.length; i++) {
+        	if (stiche[i] == null) break;
             Kartenwert karteWert = stiche[i].getWert();  // Holt den Kartenwert der aktuellen Karte
             punkte += getPunkteWert(karteWert);  // Punkte basierend auf dem Kartenwert hinzufügen
         }

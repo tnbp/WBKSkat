@@ -44,9 +44,12 @@ public class Stichrunde {
 			this.amZug = s.naechsterSpieler(sp);
 			return true;
 		}
-		if (this.aktuellerStich[0].getFarbe() != k.getFarbe()) {
+		// ab hier müssen wir keinen Trumpf bekennen--und dürfen auch keinen spielen,
+		// wenn wir bekennen können
+		if (this.aktuellerStich[0].getFarbe() != k.getFarbe() || s.getSpielart().istTrumpf(k)) {
 			for (int i = 0; i < sp.getHand().getKarten().size(); i++) {
-				if (sp.getHand().getKarten().get(i).getFarbe() == this.aktuellerStich[0].getFarbe()) {
+				if (sp.getHand().getKarten().get(i).getFarbe() == this.aktuellerStich[0].getFarbe()
+						&& !s.getSpielart().istTrumpf(sp.getHand().getKarten().get(i))) {
 					// wir können bekennen!
 					return false;
 				}
@@ -59,5 +62,9 @@ public class Stichrunde {
 		sp.getHand().legeAb(k);
 		this.amZug = s.naechsterSpieler(sp);
 		return true;
+	}
+	
+	public Spieler amZug() {
+		return this.amZug;
 	}
 }
