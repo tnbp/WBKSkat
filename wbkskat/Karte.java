@@ -1,4 +1,4 @@
-package wbkskat;
+package src;
 
 /*
 	Die Karte-Klasse erzeugt eine Karte eines bestimmten Werts
@@ -9,24 +9,27 @@ package wbkskat;
 
 public class Karte {
 	// wert = { 0 = Sieben, 1 = Acht, 2 = Neun, 3 = Bube, ... 7 = Ass }
-	private int wert;
+	private Kartenwert wert;
 	// farbe = { 0 = Karo, 1 = Herz, 2 = Pik, 3 = Kreuz }
-	private int farbe;
+	private Kartenfarbe farbe;
 	
-	public Karte(int wert, int farbe) {
+	public Karte(Kartenwert wert, Kartenfarbe farbe) {
 		this.wert = wert;
 		this.farbe = farbe;
 	}
 	
-	public int getFarbe() {
+	public Kartenfarbe getFarbe() {
 		return this.farbe;
 	}
 	
-	public int getWert() {
+	public Kartenwert getWert() {
 		return this.wert;
 	}
+	public int getRang() {
+		return this.wert.getRang();
+	}
 	
-	public int getNullWert() {
+	public int getNullRang() {
 		/*
 			Beim Nullspiel sind Zehner unter den Buben eingereiht,
 			d.h. die Reihenfolge muss geändert werden.
@@ -35,26 +38,23 @@ public class Karte {
 			Die Nullwerte lauten nun 0 = Sieben, 1 = Acht, 2 = Neun, 
 			6 = Zehn, 13 = Bube, 14 = Dame, 15 = König, 17 = Ass
 		*/
-		int nullwert = this.getWert();
-		// hässlicher Hack, sollte ersetzt werden
-		if (nullwert >= 3 && nullwert != 6) nullwert += 10;
-		return nullwert;
+		return this.wert.getNullrang();
 	}
 	
 	public String getFarbeName() {
 		// hässlicher Hack, sollte ersetzt werden
 		// gibt das Farbsymbol der Karte zurück
 		switch (this.farbe) {
-			case 0:
+			case KARO:
 			return "♦";
 			
-			case 1:
+			case HERZ:
 			return "♥";
 			
-			case 2:
+			case PIK:
 			return "♠";
 			
-			case 3:
+			case KREUZ:
 			default:
 			return "♣";
 		}
@@ -64,28 +64,28 @@ public class Karte {
 		// hässlicher Hack, sollte ersetzt werden
 		// gibt den Kurznamen der Karte zurück
 		switch (this.wert) {
-			case 0:
+			case SIEBEN:
 			return "7";
 			
-			case 1:
+			case ACHT:
 			return "8";
 			
-			case 2:
+			case NEUN:
 			return "9";
 			
-			case 3:
+			case BUBE:
 			return "B";
 			
-			case 4:
+			case DAME:
 			return "D";
 			
-			case 5:
+			case KOENIG:
 			return "K";
 			
-			case 6:
+			case ZEHN:
 			return "10";
 			
-			case 7:
+			case ASS:
 			default:
 			return "A";
 		}
@@ -98,8 +98,8 @@ public class Karte {
 	
 	public int vergleicheWert(Karte k, Spielart sp) {
 		// Bei Nullspielen (spielArt == 2) gilt eine andere Sortierreihenfolge
-		if (sp.getSpielArt() == 2) return k.getNullWert() - this.getNullWert();
-		return k.getWert() - this.getWert();
+		if (sp.getSpielArt() == 2) return k.getNullRang() - this.getNullRang();
+		return k.getRang() - this.getRang();
 	}
 	
 	public int vergleicheWert(Karte k, Spielart sp, boolean reverse) {
@@ -112,13 +112,13 @@ public class Karte {
 		
 		// für den Vergleich zweier Trümpfe gelten andere Regeln
 		
-		if (this.getWert() == 3 && k.getWert() == 3) {
+		if (this.getWert() == Kartenwert.BUBE && k.getWert() == Kartenwert.BUBE) {
 			// beide Karten sind Buben: Kreuz > Pik > Herz > Karo
-			return k.getFarbe() - this.getFarbe();
+			return k.getFarbe().getFarbrang() - this.getFarbe().getFarbrang();
 		}
 		// Buben > alle anderen Trümpfe
-		if (this.getWert() == 3) return -1;
-		if (k.getWert() == 3) return 1;
+		if (this.getWert() == Kartenwert.BUBE) return -1;
+		if (k.getWert() == Kartenwert.BUBE) return 1;
 		/*
 			Für zwei Nicht-Buben-Trümpfe gelten wieder die gleichen Regeln wie für
 			Farbkarten: Ass > Zehn > König > Dame > Neun > Acht > Sieben
