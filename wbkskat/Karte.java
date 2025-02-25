@@ -1,4 +1,4 @@
-package src;
+package wbkskat;
 
 /*
 	Die Karte-Klasse erzeugt eine Karte eines bestimmten Werts
