@@ -13,6 +13,12 @@ public class PunkteBerechnung {
 
         return punkte;  // Gesamtpunktzahl zurückgeben
     }
+    
+    public static boolean bestimmeGewinn(Karte[] stiche, Spielart sp, int reizwert) {
+        /* TODO: Ergänze Reizwert und Spielart */
+        if (berechnePunkte(stiche) > 60) return true;
+        return false;
+    }
 
     private static int getPunkteWert(Kartenwert wert) {
         // Punkte werden nun direkt anhand von if-else-Bedingungen festgelegt

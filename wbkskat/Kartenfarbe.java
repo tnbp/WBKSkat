@@ -13,6 +13,3 @@ public enum Kartenfarbe {
 		return this.farbrang;
 	}
 }
-	
-
-

@@ -6,11 +6,30 @@ public class Spielart {
 	private int spielArt;
 	// spielArt: { 0 = Farbspiel, 1 = Grand, 2 = Null }
 	private Kartenfarbe trumpfFarbe;
-	// trumpfFarbe: { 0 = Karo, 1 = Herz, 2 = Pik, 3 = Kreuz }
+	private int gereiztBis;
+	private boolean schneiderAngesagt;
+	private boolean schwarzAngesagt;
+	private boolean ouvert;
+	private boolean hand;
+	private int kontra;
+	
+	public Spielart(Kartenfarbe trumpf) {
+		this(0, trumpf);
+	}
 	
 	public Spielart(int spielart, Kartenfarbe trumpf) {
+		this(spielart, trumpf, 18, false, false, false, false, 1);
+	}
+	
+	public Spielart(int spielart, Kartenfarbe trumpf, int gereiztBis, boolean schneiderAngesagt, boolean schwarzAngesagt, boolean ouvert, boolean hand, int kontra) {
 		this.spielArt = spielart;
 		this.trumpfFarbe = trumpf;
+		this.gereiztBis = gereiztBis;
+		this.schneiderAngesagt = schneiderAngesagt;
+		this.schwarzAngesagt = schwarzAngesagt;
+		this.ouvert = ouvert;
+		this.hand = hand;
+		this.kontra = kontra;
 	}
 	
 	public int getSpielArt() {
