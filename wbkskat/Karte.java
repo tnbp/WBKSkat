@@ -46,17 +46,17 @@ public class Karte {
 		// gibt das Farbsymbol der Karte zurück
 		switch (this.farbe) {
 			case KARO:
-			return "♦";
+			return "Karo♦";
 			
 			case HERZ:
-			return "♥";
+			return "Herz♥";
 			
 			case PIK:
-			return "♠";
+			return "Pik♠";
 			
 			case KREUZ:
 			default:
-			return "♣";
+			return "Kreuz♣";
 		}
 	}
 	
