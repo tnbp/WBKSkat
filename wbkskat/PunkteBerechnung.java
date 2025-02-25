@@ -2,28 +2,31 @@ package wbkskat;
 
 public class PunkteBerechnung {
 
-	    public static int berechnePunkte(Karte[] stiche) {
-	        int punkte = 0;
+    public static int berechnePunkte(Karte[] stiche) {
+        int punkte = 0;
 
-	        for (int i = 0; i < stiche.length; i++) {
-	            int kartenWert = stiche[i].getWert();  // Holen des Kartenwerts mit dem Getter
+        // Schleife, die jede Karte im Stich durchgeht
+        for (int i = 0; i < stiche.length; i++) {
+            Kartenwert karteWert = stiche[i].getWert();  // Holt den Kartenwert der aktuellen Karte
+            punkte += getPunkteWert(karteWert);  // Punkte basierend auf dem Kartenwert hinzufügen
+        }
 
-	         // Berechnung der Punkte basierend auf dem Kartenwert
-	            if (kartenWert == 7) {
-	                punkte += 11;  // Ass gibt 11 Punkte
-	            } else if (kartenWert == 6) {
-	                punkte += 10;  // Zehn gibt 10 Punkte
-	            } else if (kartenWert == 5) {
-	                punkte += 4;   // König gibt 4 Punkte
-	            } else if (kartenWert == 4) {
-	                punkte += 3;   // Dame gibt 3 Punkte
-	            } else if (kartenWert == 3) {
-	                punkte += 2;   // Bube gibt 2 Punkte
-	            } else if (kartenWert == 0 || kartenWert == 1 || kartenWert == 2) {
-	                punkte += 0;   // 9, 8, 7 gibt 0 Punkte
-	            }
-	        }
+        return punkte;  // Gesamtpunktzahl zurückgeben
+    }
 
-	        return punkte;
-	    }
-	}
+    private static int getPunkteWert(Kartenwert wert) {
+        // Punkte werden nun direkt anhand von if-else-Bedingungen festgelegt
+        if (wert == Kartenwert.ASS) {
+            return 11;  // Ass gibt 11 Punkte
+        } else if (wert == Kartenwert.ZEHN) {
+            return 10;  // Zehn gibt 10 Punkte
+        } else if (wert == Kartenwert.KOENIG) {
+            return 4;   // König gibt 4 Punkte
+        } else if (wert == Kartenwert.DAME) {
+            return 3;   // Dame gibt 3 Punkte
+        } else if (wert == Kartenwert.BUBE) {
+            return 2;   // Bube gibt 2 Punkte
+        } else {
+            return 0;   // Sieben, Acht und Neun geben 0 Punkte
+        }
+    }
