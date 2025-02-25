@@ -8,6 +8,7 @@ public class Spieler {
 	private Karte[] stichStapel;
 	private Hand spielerHand;
 	private Position pos;
+	private Karte letzteKarte;
 	
 	public Spieler (String name, Position pos) {
 		this.name = name;
@@ -67,5 +68,13 @@ public class Spieler {
 	
 	public Position getPosition() {
 		return this.pos;
+	}
+	
+	public Karte getLetzteKarte() {
+		return this.letzteKarte;
+	}
+	
+	public void setLetzteKarte(Karte k) {
+		this.letzteKarte = k;
 	}
 }
