@@ -3,12 +3,15 @@ package wbkskat;
 public class Stichrunde {
 	private Skatspiel s;
 	private Karte[] aktuellerStich;
+	private Spieler[] karteGespieltVon;
 	private Spieler amZug;
 	
 	public Stichrunde(Skatspiel s) {
 		this.s = s;
 		this.aktuellerStich = new Karte[3];
+		this.karteGespieltVon = new Spieler[3];
 		this.amZug = s.werKommtRaus();
+		s.setStichrunde(this);
 	}
 	
 	public boolean spieleKarte(Karte k, Spieler sp) {
@@ -19,6 +22,7 @@ public class Stichrunde {
 			// Wenn der aktuelle Stich noch leer ist, kommen wir raus
 			// und dürfen jede Karte spielen.
 			this.aktuellerStich[0] = k;
+			this.karteGespieltVon[0] = sp;
 			sp.getHand().legeAb(k);
 			this.amZug = s.naechsterSpieler(sp);
 			return true;
@@ -40,6 +44,7 @@ public class Stichrunde {
 			int idx = 1;
 			if (this.aktuellerStich[1] != null) idx = 2; // es liegen schon 2 Karten
 			this.aktuellerStich[idx] = k;
+			this.karteGespieltVon[idx] = sp;
 			sp.getHand().legeAb(k);
 			this.amZug = s.naechsterSpieler(sp);
 			return true;
@@ -59,6 +64,7 @@ public class Stichrunde {
 		int idx = 1;
 		if (this.aktuellerStich[1] != null) idx = 2; // es liegen schon 2 Karten
 		this.aktuellerStich[idx] = k;
+		this.karteGespieltVon[idx] = sp;
 		sp.getHand().legeAb(k);
 		this.amZug = s.naechsterSpieler(sp);
 		return true;
@@ -66,5 +72,17 @@ public class Stichrunde {
 	
 	public Spieler amZug() {
 		return this.amZug;
+	}
+	
+	public Karte[] getKartenImStich() {
+		return this.aktuellerStich;
+	}
+	
+	public Spieler hatKarteGespielt(Karte k) {
+		for (int i = 0; i < 3; i++) {
+			if (this.aktuellerStich[i] == null) return null;
+			if (this.aktuellerStich[i] == k) return this.karteGespieltVon[i];
+		}
+		return null; // sollte nie passieren!!
 	}
 }

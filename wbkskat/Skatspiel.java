@@ -6,6 +6,7 @@ public class Skatspiel {
 	private Spieler kommtRaus;
 	private Spielart spielart;
 	private Karte[] skat;
+	private Stichrunde stichRunde;
 	
 	public Skatspiel(Spielart sp, Spieler[] spieler, Spieler kommtRaus) {
 		this.spielart = sp;
@@ -62,6 +63,14 @@ public class Skatspiel {
 	
 	public Karte[] getSkat() {
 		return this.skat;
+	}
+	
+	public void setStichrunde(Stichrunde sr) {
+		this.stichRunde = sr;
+	}
+	
+	public Stichrunde getStichrunde() {
+		return this.stichRunde;
 	}
 
 }
