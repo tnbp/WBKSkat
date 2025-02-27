@@ -2,17 +2,18 @@ package wbkskat;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class SkatGUI extends JFrame {
-	
+
+	private static final long serialVersionUID = 263116004611475177L;
 	//private Skatspiel skat;
 	private SkatController sc;
 
-    public SkatGUI(Skatspiel skat, SkatController sc) {
+    public SkatGUI(SkatController sc) {
         this.sc = sc;
+        Skatspiel skat = this.sc.getSkatSpiel();
         sc.setGUI(this);
         setTitle("Skat-Spiel");
         setSize(1400, 850);
@@ -20,57 +21,17 @@ public class SkatGUI extends JFrame {
         setLayout(new BorderLayout());
 
         // GUI-Bereiche erstellen
-        initUI(skat);
+        initUI();
 
         setVisible(true);
-        updateUI(skat);
-    	String[] spielartOptionen = { "Farbspiel", "Grand", "Null" };
-        int spielartWahl = -1;
-        while (spielartWahl < 0) {
-        	spielartWahl = JOptionPane.showOptionDialog(null, "Was willst du spielen?", "Spielart wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, spielartOptionen, null);
+        updateUI();
+        if (skat.getSpielart() == null) {
+        	skat.setupSpielart();
         }
-        /*if (spielartWahl == 1) {
-        	JOptionPane.showMessageDialog(null, "Grand? Du meintest wohl \"Farbspiel\"!", "Grand noch nicht implementiert...", JOptionPane.WARNING_MESSAGE);
-        	spielartWahl = 0;
-        }
-        if (spielartWahl == 2) {
-        	JOptionPane.showMessageDialog(null, "Null? Du meintest wohl \"Farbspiel\"!", "Null noch nicht implementiert...", JOptionPane.WARNING_MESSAGE);
-        	spielartWahl = 0;
-        }*/
-        String wieHeisstEr = null;
-        int spruchWahl = 0;
-        switch (spielartWahl) {
-        	case 0:
-        	int farbspielWahl = -1;
-        	String[] farbspielOptionen = { "Karo♦", "Herz♥", "Pik♠", "Kreuz♣" };
-        	while (farbspielWahl < 0) {
-        		farbspielWahl = JOptionPane.showOptionDialog(null, "Welche Farbe soll Trumpf sein?", "Farbe wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, farbspielOptionen, null);
-        	}
-        	wieHeisstEr = farbspielOptionen[farbspielWahl] + " ist angesagt!";
-        	spruchWahl = farbspielWahl;
-        	break;
-        	
-        	case 1:
-        	spruchWahl = 4;
-        	break;
-        	
-        	case 2:
-        	spruchWahl = ((Math.random() * 2) > 1) ? 5 : 6;
-        	break;
-        }
-        String[] skatSprueche = {
-        		"Wer nicht weiß, wie und wo, der spielt Karo!",
-        		"Wer kein Herz hat, ist ein Lump!",
-        		"Grünes Gras frisst der Haas!",
-        		"Ein Kreuz hat jeder!",
-        		"Beim Grand spielt man Asse, oder man soll's lasse!",
-        		"7, 9, und Unter, da geht keiner drunter!",
-        		"Ein Null gibt immer Contra!"
-        };
-        JOptionPane.showMessageDialog(null, skatSprueche[spruchWahl], wieHeisstEr, JOptionPane.WARNING_MESSAGE);
     }
 
-    private void initUI(Skatspiel skat) {
+    private void initUI() {
+    	Skatspiel skat = this.sc.getSkatSpiel();
     	//  Spielerhände
         JPanel handOben = new JPanel(new GridLayout(1, 0)); // Grid für Zeilen/Spalten
         handOben.setName("handOben");
@@ -125,77 +86,34 @@ public class SkatGUI extends JFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         add(punkteAnzeige, BorderLayout.SOUTH);
-        //add(soundButton, BorderLayout.EAST);
-        
-     // TEST!!!
-    	// Eingabefeld für Spieler 1
-        String spieler1Name = JOptionPane.showInputDialog(
-                null,
-                "Spieler 1, bitte gib deinen Namen ein:",
-                "Spieler 1 Name Eingabe",
-                JOptionPane.QUESTION_MESSAGE
-        );
-
-        // Überprüfung, ob eine Eingabe gemacht wurde
-        if (spieler1Name != null && !spieler1Name.equals("")) {
-        	skat.getSpieler()[0].setName(spieler1Name); // Name in Spieler-Objekt speichern
-            System.out.println("Spieler 1 heißt jetzt: " + skat.getSpieler()[0].getName());
-
-            // GUI aktualisieren, damit der neue Name sofort angezeigt wird
-            handOben.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[0].getName()));
-            handOben.repaint(); // Neu rendern
-        } else {
-            System.out.println("Kein Name eingegeben.");
-        }
-        
-        String spieler2Name = JOptionPane.showInputDialog(
-                null,
-                "Spieler 2, bitte gib deinen Namen ein:",
-                "Spieler 2 Name Eingabe",
-                JOptionPane.QUESTION_MESSAGE
-        );
-        if (spieler2Name != null && !spieler2Name.equals("")) {
-            skat.getSpieler()[1].setName(spieler2Name); // Name in Spieler-Objekt speichern
-            System.out.println("Spieler 2 heißt jetzt: " + skat.getSpieler()[1].getName());
-
-            // GUI aktualisieren, damit der neue Name sofort angezeigt wird
-            handRechts.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[1].getName()));
-            handRechts.repaint(); // Neu rendern
-        } else {
-            System.out.println("Kein Name eingegeben.");
-        }
-        
-        String spieler3Name = JOptionPane.showInputDialog(
-                null,
-                "Spieler 3, bitte gib deinen Namen ein:",
-                "Spieler 3 Name Eingabe",
-                JOptionPane.QUESTION_MESSAGE
-        );
-        if (spieler3Name != null && !spieler3Name.equals("")) {
-        	skat.getSpieler()[2].setName(spieler3Name); // Name in Spieler-Objekt speichern
-            System.out.println("Spieler 3 heißt jetzt: " + skat.getSpieler()[2].getName());
-
-            // GUI aktualisieren, damit der neue Name sofort angezeigt wird
-            handLinks.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[2].getName()));
-            handLinks.repaint(); // Neu rendern
-        } else {
-            System.out.println("Kein Name eingegeben.");
-        }
-
-    	// ENDE TEST!!!
     }
 
     // Methode zum Erstellen einer Karten-Schaltfläche mit skaliertem Bild und Klick-Aktion
-    private JButton erzeugeButton(Karte k, boolean rueckseite) {
+    private JButton erzeugeButton(Karte k, boolean rueckseite, Position pos) {
     	String kartenName = k.getFarbe().name() + k.getWert().name();
         String dateiName =  kartenName + ".png";
         if (rueckseite) dateiName = "RUECKSEITE.png";
 
         ImageIcon icon = new ImageIcon("images/" + dateiName);
 
-
-        // Bild skalieren und als Icon setzen
-        icon = new ImageIcon(icon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH));
+        // Bild drehen? und skalieren
+        if (pos == null) icon = new StretchIcon(icon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH));
+        else switch (pos) {
+        	default:
+        	case ZWOELF:
+        	icon = new StretchIcon(icon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH));
+        	break;
+        	
+        	case ACHT:
+        	icon = new ImageIcon(rotateClockwise90(toBufferedImage(icon.getImage())));
+        	icon = new StretchIcon(icon.getImage().getScaledInstance(120, 80, Image.SCALE_SMOOTH));
+        	break;
+        	
+        	case VIER:
+    		icon = new ImageIcon(rotateCounterClockwise90(toBufferedImage(icon.getImage())));
+        	icon = new StretchIcon(icon.getImage().getScaledInstance(120, 80, Image.SCALE_SMOOTH));
+        	break;
+        }
 
         // Erstelle Button mit Bild & füge Klick-Aktion hinzu
         JButton button = new JButton(icon);
@@ -206,18 +124,22 @@ public class SkatGUI extends JFrame {
     }
     
     private JButton erzeugeSkatButton(Karte k, boolean rueckseite) {
-    	JButton skatButton = erzeugeButton(k, rueckseite);
+    	JButton skatButton = erzeugeButton(k, rueckseite, null);
         skatButton.addActionListener(e -> this.sc.behandleSkatKlick(k));
+        skatButton.setToolTipText("Karte im Skat");
         return skatButton;
     }
     
-    private JButton erzeugeHandButton(Karte k, boolean rueckseite) {
-    	JButton handButton = erzeugeButton(k, rueckseite);
+    private JButton erzeugeHandButton(Karte k, boolean rueckseite, Position pos) {
+    	JButton handButton = erzeugeButton(k, rueckseite, pos);
         handButton.addActionListener(e -> this.sc.behandleHandKlick(k));
+        if (rueckseite) handButton.setToolTipText(k.getHand().getBesitzer().getName() + "s Karte");
+        else handButton.setToolTipText(k.getFarbeName() + " " + k.getWertName());
         return handButton;
     }
     
-    public void updateUI(Skatspiel skat) {
+    public void updateUI() {
+    	Skatspiel skat = this.sc.getSkatSpiel();
     	Component[] frameElemente = this.getContentPane().getComponents();
     	JPanel handOben = null, handLinks = null, handRechts = null, 
     			centerPanel = null, skatBereich = null;
@@ -252,10 +174,10 @@ public class SkatGUI extends JFrame {
             	else if (skat.getStichrunde().getKartenImStich()[2] != null) verdeckt = true;
             	else verdeckt = skat.getStichrunde().amZug() != skat.getSpieler()[i];
                 JButton cardButton = erzeugeHandButton(skat.getSpieler()[i].getHand().getKarten().get(j), 
-                		verdeckt);
-                if (skat.getSpieler()[i].getPosition()==Position.ACHT) handLinks.add(cardButton);
-                if (skat.getSpieler()[i].getPosition()==Position.VIER) handRechts.add(cardButton);
-                if (skat.getSpieler()[i].getPosition()==Position.ZWOELF) handOben.add(cardButton);
+                		verdeckt, skat.getSpieler()[i].getPosition());
+                if (skat.getSpieler()[i].getPosition() == Position.ACHT) handLinks.add(cardButton);
+                if (skat.getSpieler()[i].getPosition() == Position.VIER) handRechts.add(cardButton);
+                if (skat.getSpieler()[i].getPosition() == Position.ZWOELF) handOben.add(cardButton);
         	}
         }
         Karte skat1 = skat.getSkat()[0];
@@ -300,5 +222,43 @@ public class SkatGUI extends JFrame {
     	}
 		revalidate();
 		repaint();
+    }
+    
+    // shamelessly stolen from stackoverflow.com/questions/20959796
+    public static BufferedImage rotateClockwise90(BufferedImage src) {
+        int width = src.getWidth();
+        int height = src.getHeight();
+        BufferedImage dest = new BufferedImage(height, width, src.getType());
+        Graphics2D graphics2D = dest.createGraphics();
+        graphics2D.translate((height - width) / 2, (height - width) / 2);
+        graphics2D.rotate(Math.PI / 2, height / 2, width / 2);
+        graphics2D.drawRenderedImage(src, null);
+
+        return dest;
+    }
+    
+    // screw efficiency :^)
+    public static BufferedImage rotateCounterClockwise90(BufferedImage src) {
+        return rotateClockwise90(rotateClockwise90(rotateClockwise90(src)));
+    }
+    
+    // shamelessly stolen from stackoverflow.com/questions/13605248
+    public static BufferedImage toBufferedImage(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
     }
 }

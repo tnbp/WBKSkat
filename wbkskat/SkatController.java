@@ -12,6 +12,54 @@ public class SkatController {
 	private SkatGUI gui;
 	
 	public SkatController() {
+		Spielart sp = null;
+		
+		Spieler S1 = new Spieler("Luffy", Position.ZWOELF);
+    	Spieler S2 = new Spieler("Zorro", Position.VIER);
+    	Spieler S3 = new Spieler("Buggy", Position.ACHT);
+    	
+        String spieler1Name = JOptionPane.showInputDialog(
+                null,
+                "Spieler 1, bitte gib deinen Namen ein:",
+                "Spieler 1 Name Eingabe",
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        // Überprüfung, ob eine Eingabe gemacht wurde
+        if (spieler1Name != null && !spieler1Name.equals("")) {
+        	S1.setName(spieler1Name); // Name in Spieler-Objekt speichern
+            System.out.println("Spieler 1 heißt jetzt: " + S1.getName());
+        } else {
+            System.out.println("Kein Name eingegeben.");
+        }
+        String spieler2Name = JOptionPane.showInputDialog(
+                null,
+                "Spieler 2, bitte gib deinen Namen ein:",
+                "Spieler 2 Name Eingabe",
+                JOptionPane.QUESTION_MESSAGE
+        );
+        if (spieler2Name != null && !spieler2Name.equals("")) {
+            S2.setName(spieler2Name); // Name in Spieler-Objekt speichern
+            System.out.println("Spieler 2 heißt jetzt: " + S2.getName());
+        } else {
+            System.out.println("Kein Name eingegeben.");
+        }
+        
+        String spieler3Name = JOptionPane.showInputDialog(
+                null,
+                "Spieler 3, bitte gib deinen Namen ein:",
+                "Spieler 3 Name Eingabe",
+                JOptionPane.QUESTION_MESSAGE
+        );
+        if (spieler3Name != null && !spieler3Name.equals("")) {
+        	S3.setName(spieler3Name); // Name in Spieler-Objekt speichern
+            System.out.println("Spieler 3 heißt jetzt: " + S3.getName());
+        } else {
+            System.out.println("Kein Name eingegeben.");
+        }
+        
+    	this.skat = new Skatspiel(sp, new Spieler[] {S1,S2,S3}, S1);
+    	this.skat.setSkatController(this);
 	}
 	
 	public void setGUI(SkatGUI gui) {
@@ -51,7 +99,7 @@ public class SkatController {
     	if (besitzer == skat.getStichrunde().amZug()) {
     		if (skat.getStichrunde().spieleKarte(k, besitzer)) {
     			SoundPlayer.playSound("sounds/KarteSpielen.wav");
-	    		gui.updateUI(this.skat);
+	    		gui.updateUI();
 	    		if (skat.getStichrunde().getKartenImStich()[2] != null) {
 	    			// Stichrunde zu Ende!
 	    			skat.sperreEingabe();
@@ -60,12 +108,10 @@ public class SkatController {
 	    					stichkarten[1], stichkarten[2]));
 	    			gewinner.nimmStichZuDir(stichkarten);
 	    			System.out.println("Der Stich ist " + PunkteBerechnung.berechnePunkte(stichkarten) + " Augen wert und geht an " + gewinner.getName());
-	    			Stichrunde s = new Stichrunde(skat, gewinner);
 	    			Timer t = new Timer(3000, new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							System.out.println("AAAA!");
-							gui.updateUI(skat);
+							gui.updateUI();
 							skat.entsperreEingabe();
 						}
 	    			});

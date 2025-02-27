@@ -2,6 +2,8 @@ package wbkskat;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class Spielart {
 	private int spielArt;
 	// spielArt: { 0 = Farbspiel, 1 = Grand, 2 = Null }
@@ -12,6 +14,10 @@ public class Spielart {
 	private boolean ouvert;
 	private boolean hand;
 	private int kontra;
+	
+	public Spielart() {
+		this(99, null);
+	}
 	
 	public Spielart(Kartenfarbe trumpf) {
 		this(0, trumpf);
