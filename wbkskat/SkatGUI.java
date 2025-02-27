@@ -106,6 +106,13 @@ public class SkatGUI extends JFrame {
         punkteAnzeige.setName("punkteAnzeige");
         punkteAnzeige.setFont(new Font("Arial", Font.BOLD, 16));
 
+        /*JButton soundButton = new JButton("Sound abspielen");
+        soundButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playSound("sounds/KarteSpielen.wav");
+            }
+        });*/
         
         add(handOben, BorderLayout.NORTH);
         add(handLinks, BorderLayout.WEST);
@@ -118,6 +125,7 @@ public class SkatGUI extends JFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         add(punkteAnzeige, BorderLayout.SOUTH);
+        //add(soundButton, BorderLayout.EAST);
         
      // TEST!!!
     	// Eingabefeld für Spieler 1

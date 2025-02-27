@@ -3,6 +3,7 @@ package wbkskat;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 public class SkatController {
@@ -48,30 +49,39 @@ public class SkatController {
     	System.out.println("Die Karte " + k.getFarbe().name() + k.getWert().name() + " gehört "
     			+ besitzer.getName());
     	if (besitzer == skat.getStichrunde().amZug()) {
-    		skat.getStichrunde().spieleKarte(k, besitzer);
-    		gui.updateUI(this.skat);
-    		if (skat.getStichrunde().getKartenImStich()[2] != null) {
-    			// Stichrunde zu Ende!
-    			skat.sperreEingabe();
-    			Karte[] stichkarten = skat.getStichrunde().getKartenImStich();
-    			Spieler gewinner = skat.getStichrunde().hatKarteGespielt(skat.getSpielart().machtDenStich(stichkarten[0], 
-    					stichkarten[1], stichkarten[2]));
-    			gewinner.nimmStichZuDir(stichkarten);
-    			System.out.println("Der Stich ist " + PunkteBerechnung.berechnePunkte(stichkarten) + " Augen wert und geht an " + gewinner.getName());
-    			Stichrunde s = new Stichrunde(skat, gewinner);
-    			Timer t = new Timer(3000, new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.out.println("AAAA!");
-						gui.updateUI(skat);
-						skat.entsperreEingabe();
-					}
-    			});
-    			t.setRepeats(false);
-    			t.start();
+    		if (skat.getStichrunde().spieleKarte(k, besitzer)) {
+    			SoundPlayer.playSound("sounds/KarteSpielen.wav");
+	    		gui.updateUI(this.skat);
+	    		if (skat.getStichrunde().getKartenImStich()[2] != null) {
+	    			// Stichrunde zu Ende!
+	    			skat.sperreEingabe();
+	    			Karte[] stichkarten = skat.getStichrunde().getKartenImStich();
+	    			Spieler gewinner = skat.getStichrunde().hatKarteGespielt(skat.getSpielart().machtDenStich(stichkarten[0], 
+	    					stichkarten[1], stichkarten[2]));
+	    			gewinner.nimmStichZuDir(stichkarten);
+	    			System.out.println("Der Stich ist " + PunkteBerechnung.berechnePunkte(stichkarten) + " Augen wert und geht an " + gewinner.getName());
+	    			Stichrunde s = new Stichrunde(skat, gewinner);
+	    			Timer t = new Timer(3000, new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							System.out.println("AAAA!");
+							gui.updateUI(skat);
+							skat.entsperreEingabe();
+						}
+	    			});
+	    			t.setRepeats(false);
+	    			t.start();
+	    		}
+    		}
+    		else {
+    			Karte vorgabe = skat.getStichrunde().getKartenImStich()[0];
+    			String zwangFarbe = skat.getSpielart().istTrumpf(vorgabe) ? "Trumpf" : vorgabe.getFarbeName();
+    			JOptionPane.showMessageDialog(null, besitzer.getName() + " muss bekennen: " + zwangFarbe + " muss gespielt werden!", "Bekennen oder brennen!", JOptionPane.WARNING_MESSAGE);
     		}
     	}
-    	else System.out.println(besitzer.getName() + " ist noch nicht dran!");
+    	else {
+    		JOptionPane.showMessageDialog(null, skat.getStichrunde().amZug().getName() + " ist am Zug!", "Du bist nicht dran!", JOptionPane.WARNING_MESSAGE);
+    	}
     }
     
     public void behandleSkatKlick(Karte k) {
