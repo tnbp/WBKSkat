@@ -13,7 +13,7 @@ public class Spieler {
 	public Spieler (String name, Position pos) {
 		this.name = name;
 		this.stichStapel = new Karte[32];
-		this.spielerHand = new Hand();
+		this.spielerHand = new Hand(this);
 		this.pos = pos;
 	}
 	
