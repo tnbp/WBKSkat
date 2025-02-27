@@ -6,7 +6,8 @@ public class Skatspiel {
 	private Spieler kommtRaus;
 	private Spielart spielart;
 	private Karte[] skat;
-	private Stichrunde stichRunde;
+	private Stichrunde stichRunde = null;
+	private boolean eingabeGesperrt = false;
 	
 	public Skatspiel(Spielart sp, Spieler[] spieler, Spieler kommtRaus) {
 		this.spielart = sp;
@@ -71,6 +72,18 @@ public class Skatspiel {
 	
 	public Stichrunde getStichrunde() {
 		return this.stichRunde;
+	}
+	
+	public boolean eingabeGesperrt() {
+		return this.eingabeGesperrt;
+	}
+	
+	public void sperreEingabe() {
+		this.eingabeGesperrt = true;
+	}
+	
+	public void entsperreEingabe() {
+		this.eingabeGesperrt = false;
 	}
 
 }

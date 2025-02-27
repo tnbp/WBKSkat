@@ -14,10 +14,12 @@ import java.util.ArrayList;
 public class Hand {
 	// ArrayList, die die Karten-Objekte der Hand enthält
 	private ArrayList<Karte> karten;
+	private Spieler besitzer;
 	
-	public Hand() {
+	public Hand(Spieler besitzer) {
 		// die Hand enthält zu Beginn noch keine Karten
 		this.karten = new ArrayList<Karte>();
+		this.besitzer = besitzer;
 	}
 	
 	public ArrayList<Karte> getKarten() {
@@ -26,11 +28,13 @@ public class Hand {
 	
 	public void fuegeHinzu(Karte k) {
 		// füge der Hand das Karten-Objekt k hinzu
+		k.setHand(this);
 		this.karten.add(k);
 	}
 	
 	public boolean legeAb(Karte k) {
 		// lege eine Karte aus der Hand ab
+		k.setHand(null);
 		return this.karten.remove(k);
 	}
 	
@@ -90,5 +94,9 @@ public class Hand {
 		this.karten.addAll(pik);
 		this.karten.addAll(herz);
 		this.karten.addAll(karo);
+	}
+	
+	public Spieler getBesitzer() {
+		return this.besitzer;
 	}
 }

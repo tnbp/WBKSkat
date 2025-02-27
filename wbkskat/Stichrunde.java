@@ -7,11 +7,17 @@ public class Stichrunde {
 	private Spieler amZug;
 	
 	public Stichrunde(Skatspiel s) {
+		System.out.println("DEBUG: Stichrunde angefangen!");
 		this.s = s;
 		this.aktuellerStich = new Karte[3];
 		this.karteGespieltVon = new Spieler[3];
 		this.amZug = s.werKommtRaus();
 		s.setStichrunde(this);
+	}
+	
+	public Stichrunde(Skatspiel s, Spieler kommtRaus) {
+		this(s);
+		this.amZug = kommtRaus;
 	}
 	
 	public boolean spieleKarte(Karte k, Spieler sp) {

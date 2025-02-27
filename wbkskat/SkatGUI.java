@@ -1,32 +1,76 @@
 package wbkskat;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Objects;
 
 public class SkatGUI extends JFrame {
+	
+	//private Skatspiel skat;
+	private SkatController sc;
 
-    public SkatGUI(Skatspiel sk) {
+    public SkatGUI(Skatspiel skat, SkatController sc) {
+        this.sc = sc;
+        sc.setGUI(this);
         setTitle("Skat-Spiel");
         setSize(1400, 850);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // auf x klicken schließt
         setLayout(new BorderLayout());
 
         // GUI-Bereiche erstellen
-        initUI(sk);
+        initUI(skat);
 
         setVisible(true);
-        updateUI(sk);
+        updateUI(skat);
+    	String[] spielartOptionen = { "Farbspiel", "Grand", "Null" };
+        int spielartWahl = -1;
+        while (spielartWahl < 0) {
+        	spielartWahl = JOptionPane.showOptionDialog(null, "Was willst du spielen?", "Spielart wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, spielartOptionen, null);
+        }
+        /*if (spielartWahl == 1) {
+        	JOptionPane.showMessageDialog(null, "Grand? Du meintest wohl \"Farbspiel\"!", "Grand noch nicht implementiert...", JOptionPane.WARNING_MESSAGE);
+        	spielartWahl = 0;
+        }
+        if (spielartWahl == 2) {
+        	JOptionPane.showMessageDialog(null, "Null? Du meintest wohl \"Farbspiel\"!", "Null noch nicht implementiert...", JOptionPane.WARNING_MESSAGE);
+        	spielartWahl = 0;
+        }*/
+        String wieHeisstEr = null;
+        int spruchWahl = 0;
+        switch (spielartWahl) {
+        	case 0:
+        	int farbspielWahl = -1;
+        	String[] farbspielOptionen = { "Karo♦", "Herz♥", "Pik♠", "Kreuz♣" };
+        	while (farbspielWahl < 0) {
+        		farbspielWahl = JOptionPane.showOptionDialog(null, "Welche Farbe soll Trumpf sein?", "Farbe wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, farbspielOptionen, null);
+        	}
+        	wieHeisstEr = farbspielOptionen[farbspielWahl] + " ist angesagt!";
+        	spruchWahl = farbspielWahl;
+        	break;
+        	
+        	case 1:
+        	spruchWahl = 4;
+        	break;
+        	
+        	case 2:
+        	spruchWahl = ((Math.random() * 2) > 1) ? 5 : 6;
+        	break;
+        }
+        String[] skatSprueche = {
+        		"Wer nicht weiß, wie und wo, der spielt Karo!",
+        		"Wer kein Herz hat, ist ein Lump!",
+        		"Grünes Gras frisst der Haas!",
+        		"Ein Kreuz hat jeder!",
+        		"Beim Grand spielt man Asse, oder man soll's lasse!",
+        		"7, 9, und Unter, da geht keiner drunter!",
+        		"Ein Null gibt immer Contra!"
+        };
+        JOptionPane.showMessageDialog(null, skatSprueche[spruchWahl], wieHeisstEr, JOptionPane.WARNING_MESSAGE);
     }
 
-    private void initUI(Skatspiel sk) {
-        // TEST!!!
-    	
-    	// ENDE TEST!!!
-    	
+    private void initUI(Skatspiel skat) {
     	//  Spielerhände
         JPanel handOben = new JPanel(new GridLayout(1, 0)); // Grid für Zeilen/Spalten
         handOben.setName("handOben");
@@ -35,9 +79,9 @@ public class SkatGUI extends JFrame {
         JPanel handRechts = new JPanel(new GridLayout(0, 1));
         handRechts.setName("handRechts");
 
-        handOben.setBorder(BorderFactory.createTitledBorder(sk.getSpieler()[0].getName()));
-        handLinks.setBorder(BorderFactory.createTitledBorder(sk.getSpieler()[2].getName()));
-        handRechts.setBorder(BorderFactory.createTitledBorder(sk.getSpieler()[1].getName()));
+        handOben.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[0].getName()));
+        handLinks.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[2].getName()));
+        handRechts.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[1].getName()));
 
         //  Hände
         handOben.setPreferredSize(new Dimension(800, 150));
@@ -74,16 +118,70 @@ public class SkatGUI extends JFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         add(punkteAnzeige, BorderLayout.SOUTH);
+        
+     // TEST!!!
+    	// Eingabefeld für Spieler 1
+        String spieler1Name = JOptionPane.showInputDialog(
+                null,
+                "Spieler 1, bitte gib deinen Namen ein:",
+                "Spieler 1 Name Eingabe",
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        // Überprüfung, ob eine Eingabe gemacht wurde
+        if (spieler1Name != null && !spieler1Name.equals("")) {
+        	skat.getSpieler()[0].setName(spieler1Name); // Name in Spieler-Objekt speichern
+            System.out.println("Spieler 1 heißt jetzt: " + skat.getSpieler()[0].getName());
+
+            // GUI aktualisieren, damit der neue Name sofort angezeigt wird
+            handOben.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[0].getName()));
+            handOben.repaint(); // Neu rendern
+        } else {
+            System.out.println("Kein Name eingegeben.");
+        }
+        
+        String spieler2Name = JOptionPane.showInputDialog(
+                null,
+                "Spieler 2, bitte gib deinen Namen ein:",
+                "Spieler 2 Name Eingabe",
+                JOptionPane.QUESTION_MESSAGE
+        );
+        if (spieler2Name != null && !spieler2Name.equals("")) {
+            skat.getSpieler()[1].setName(spieler2Name); // Name in Spieler-Objekt speichern
+            System.out.println("Spieler 2 heißt jetzt: " + skat.getSpieler()[1].getName());
+
+            // GUI aktualisieren, damit der neue Name sofort angezeigt wird
+            handRechts.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[1].getName()));
+            handRechts.repaint(); // Neu rendern
+        } else {
+            System.out.println("Kein Name eingegeben.");
+        }
+        
+        String spieler3Name = JOptionPane.showInputDialog(
+                null,
+                "Spieler 3, bitte gib deinen Namen ein:",
+                "Spieler 3 Name Eingabe",
+                JOptionPane.QUESTION_MESSAGE
+        );
+        if (spieler3Name != null && !spieler3Name.equals("")) {
+        	skat.getSpieler()[2].setName(spieler3Name); // Name in Spieler-Objekt speichern
+            System.out.println("Spieler 3 heißt jetzt: " + skat.getSpieler()[2].getName());
+
+            // GUI aktualisieren, damit der neue Name sofort angezeigt wird
+            handLinks.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[2].getName()));
+            handLinks.repaint(); // Neu rendern
+        } else {
+            System.out.println("Kein Name eingegeben.");
+        }
+
+    	// ENDE TEST!!!
     }
 
     // Methode zum Erstellen einer Karten-Schaltfläche mit skaliertem Bild und Klick-Aktion
-    private JButton createCardButton(Skatspiel sk, Karte k, boolean rueckseite) {
+    private JButton erzeugeButton(Karte k, boolean rueckseite) {
     	String kartenName = k.getFarbe().name() + k.getWert().name();
         String dateiName =  kartenName + ".png";
         if (rueckseite) dateiName = "RUECKSEITE.png";
-
-        // Entferne die Endung .png, .jpg oder .jpeg
-        //String cardName = dateiName.replaceAll("\\.(png|jpg|jpeg)$", ""); // regulärer Ausdruck
 
         ImageIcon icon = new ImageIcon("images/" + dateiName);
 
@@ -96,29 +194,22 @@ public class SkatGUI extends JFrame {
         button.setName(kartenName);
         button.setPreferredSize(new Dimension(80, 120));
 
-        // Ausgabe bei Klick
-        button.addActionListener(e -> testfunktion(sk, k));
-
         return button;
     }
     
-    private void testfunktion(Skatspiel Skat, Karte k) {
-    	System.out.println(k.getFarbe().name()+k.getWert().name());
-    	Stichrunde sr = new Stichrunde(Skat);
-    	for (int i = 0; i < Skat.getStichrunde().amZug().getHand().getKarten().size(); i++) {
-    		if (Skat.getStichrunde().amZug().getHand().getKarten().get(i).getFarbe() == Kartenfarbe.PIK) {
-    			sr.spieleKarte(Skat.getStichrunde().amZug().getHand().getKarten().get(i), Skat.getStichrunde().amZug());
-    			break;
-    		}
-    	}
-    	int i = 0;
-    	while (!sr.spieleKarte(Skat.getStichrunde().amZug().getHand().getKarten().get(i++), Skat.getStichrunde().amZug())) ;
-    	i = 0;
-    	while (!sr.spieleKarte(Skat.getStichrunde().amZug().getHand().getKarten().get(i++), Skat.getStichrunde().amZug())) ;
-    	updateUI(Skat);
+    private JButton erzeugeSkatButton(Karte k, boolean rueckseite) {
+    	JButton skatButton = erzeugeButton(k, rueckseite);
+        skatButton.addActionListener(e -> this.sc.behandleSkatKlick(k));
+        return skatButton;
     }
     
-    private void updateUI(Skatspiel sk) {
+    private JButton erzeugeHandButton(Karte k, boolean rueckseite) {
+    	JButton handButton = erzeugeButton(k, rueckseite);
+        handButton.addActionListener(e -> this.sc.behandleHandKlick(k));
+        return handButton;
+    }
+    
+    public void updateUI(Skatspiel skat) {
     	Component[] frameElemente = this.getContentPane().getComponents();
     	JPanel handOben = null, handLinks = null, handRechts = null, 
     			centerPanel = null, skatBereich = null;
@@ -141,44 +232,47 @@ public class SkatGUI extends JFrame {
     	stichBereich.removeAll();
     	skatBereich.removeAll();
         for (int i = 0; i < 3; i++) {
-        	for (int j = 0; j < sk.getSpieler()[i].getHand().getKarten().size(); j++) {
-        		String kartenFarbe = sk.getSpieler()[i].getHand().getKarten().get(j).getFarbe().name();
-            	String kartenWert = sk.getSpieler()[i].getHand().getKarten().get(j).getWert().name();
+        	for (int j = 0; j < skat.getSpieler()[i].getHand().getKarten().size(); j++) {
+        		String kartenFarbe = skat.getSpieler()[i].getHand().getKarten().get(j).getFarbe().name();
+            	String kartenWert = skat.getSpieler()[i].getHand().getKarten().get(j).getWert().name();
             	String kartenName = kartenFarbe + kartenWert;
-                JButton cardButton = createCardButton(sk, sk.getSpieler()[i].getHand().getKarten().get(j), 
-                		sk.getStichrunde().amZug() != sk.getSpieler()[i]);
-                if (sk.getSpieler()[i].getPosition()==Position.ACHT) handLinks.add(cardButton);
-                if (sk.getSpieler()[i].getPosition()==Position.VIER) handRechts.add(cardButton);
-                if (sk.getSpieler()[i].getPosition()==Position.ZWOELF) handOben.add(cardButton);
+            	boolean verdeckt = false;
+            	if (skat.getStichrunde() == null) {
+            		// Beginn des Spiels - noch keine Stichrunde!
+            		verdeckt = (skat.werKommtRaus() != skat.getSpieler()[i]);
+            	}
+            	else if (skat.getStichrunde().getKartenImStich()[2] != null) verdeckt = true;
+            	else verdeckt = skat.getStichrunde().amZug() != skat.getSpieler()[i];
+                JButton cardButton = erzeugeHandButton(skat.getSpieler()[i].getHand().getKarten().get(j), 
+                		verdeckt);
+                if (skat.getSpieler()[i].getPosition()==Position.ACHT) handLinks.add(cardButton);
+                if (skat.getSpieler()[i].getPosition()==Position.VIER) handRechts.add(cardButton);
+                if (skat.getSpieler()[i].getPosition()==Position.ZWOELF) handOben.add(cardButton);
         	}
         }
-        Karte skat1 = sk.getSkat()[0];
-        Karte skat2 = sk.getSkat()[1];
+        Karte skat1 = skat.getSkat()[0];
+        Karte skat2 = skat.getSkat()[1];
         File skat1Bild = new File("images/" + skat1.getFarbe().name() + skat1.getWert().name() + ".png");
         File skat2Bild = new File("images/" + skat2.getFarbe().name() + skat2.getWert().name() + ".png");
-        JButton cardButton = createCardButton(sk, skat1, true);
+        JButton cardButton = erzeugeSkatButton(skat1, true);
         cardButton.setName("skat1");
         skatBereich.add(cardButton);
-    	cardButton = createCardButton(sk, skat2, true);
+    	cardButton = erzeugeSkatButton(skat2, true);
     	cardButton.setName("skat2");
     	skatBereich.add(cardButton);
     	// Karten im Stich
     	for (int i = 0; i < 3; i++) {
-    		Karte stichkarte = sk.getStichrunde().getKartenImStich()[i];
+    		if (skat.getStichrunde() == null) break;
+    		Karte stichkarte = skat.getStichrunde().getKartenImStich()[i];
     		if (stichkarte == null) break;
-    		BufferedImage img = null;
-    		try {
-    			img = ImageIO.read(new File("images/" + stichkarte.getFarbe().name() + stichkarte.getWert().name() + ".png"));
-    		} catch (Exception e) {
-    		}
-    		Image dimg = img.getScaledInstance(2*100, 2*146, Image.SCALE_SMOOTH);
-    		ImageIcon imgico = new ImageIcon(dimg);
-    		JLabel imStich = new JLabel(imgico);
+    		ImageIcon img = new ImageIcon("images/" + stichkarte.getFarbe().name() + stichkarte.getWert().name() + ".png");
+    		img = new ImageIcon(img.getImage().getScaledInstance(2*100, 2*146, Image.SCALE_SMOOTH));
+    		JLabel imStich = new JLabel(img);
     		stichBereich.add(imStich);
     		stichBereich.setComponentZOrder(imStich, 0);
     		int mitteX = stichBereich.getWidth() / 2 - 100;
     		int mitteY = stichBereich.getHeight() / 2 - 146;
-    		switch (sk.getStichrunde().hatKarteGespielt(stichkarte).getPosition()) {
+    		switch (skat.getStichrunde().hatKarteGespielt(stichkarte).getPosition()) {
     			case VIER:
     			//mitteY += 50;
     			mitteX += 100;
@@ -195,8 +289,8 @@ public class SkatGUI extends JFrame {
     		}
     		imStich.setLocation(mitteX, mitteY);
     		imStich.setSize(2*100, 2*146);
-    		revalidate();
-    		repaint();
     	}
+		revalidate();
+		repaint();
     }
 }

@@ -12,6 +12,7 @@ public class Karte {
 	private Kartenwert wert;
 	// farbe = { 0 = Karo, 1 = Herz, 2 = Pik, 3 = Kreuz }
 	private Kartenfarbe farbe;
+	private Hand hand;
 	
 	public Karte(Kartenwert wert, Kartenfarbe farbe) {
 		this.wert = wert;
@@ -130,5 +131,13 @@ public class Karte {
 		// siehe oben; umgekehrte Reihenfolge, falls reverse == true
 		if (reverse) return -vergleicheTruempfe(k, sp);
 		return vergleicheTruempfe(k, sp);
+	}
+	
+	public void setHand(Hand hand) {
+		this.hand = hand;
+	}
+	
+	public Hand getHand() {
+		return this.hand;
 	}
 }
