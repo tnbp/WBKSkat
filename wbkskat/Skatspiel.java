@@ -91,6 +91,10 @@ public class Skatspiel {
 	
 	public void setupSpielart() {
 		// wir fangen von null an -- frage alles ab!
+		// erst sortieren...
+		for (int i = 0; i < 3; i++) {
+        	this.spieler[i].getHand().sortiereHand(new Spielart(Kartenfarbe.KREUZ));
+        }
 		String[] spielartOptionen = { "Farbspiel", "Grand", "Null" };
         int spielartWahl = -1;
         while (spielartWahl < 0) {
@@ -110,10 +114,12 @@ public class Skatspiel {
         	break;
         	
         	case 1:
+        	wieHeisstEr = spielartOptionen[spielartWahl] + " ist angesagt!";
         	spruchWahl = 4;
         	break;
         	
         	case 2:
+            wieHeisstEr = spielartOptionen[spielartWahl] + " ist angesagt!";
         	spruchWahl = ((Math.random() * 2) > 1) ? 5 : 6;
         	break;
         }
@@ -127,7 +133,7 @@ public class Skatspiel {
         		"Eine Kreuz hat jeder!",
         		"Beim Grand spielt man Asse, oder man soll's lasse!",
         		"7, 9, und Unter, da geht keiner drunter!",
-        		"Ein Null gibt immer Contra!"
+        		"Eine Null gibt immer Contra!"
         };
         JOptionPane.showMessageDialog(null, skatSprueche[spruchWahl], wieHeisstEr, JOptionPane.WARNING_MESSAGE);
         // TODO: Hand, Ouvert, Schneider etc.

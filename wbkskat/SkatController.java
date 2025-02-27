@@ -59,6 +59,7 @@ public class SkatController {
         }
         
     	this.skat = new Skatspiel(sp, new Spieler[] {S1,S2,S3}, S1);
+    	S1.getHand().sortiereHand(new Spielart(Kartenfarbe.KREUZ));
     	this.skat.setSkatController(this);
 	}
 	
@@ -109,10 +110,12 @@ public class SkatController {
 	    			gewinner.nimmStichZuDir(stichkarten);
 	    			System.out.println("Der Stich ist " + PunkteBerechnung.berechnePunkte(stichkarten) + " Augen wert und geht an " + gewinner.getName());
 	    			Timer t = new Timer(3000, new ActionListener() {
-						@Override
 						public void actionPerformed(ActionEvent e) {
-							gui.updateUI();
+							System.out.println("AAAA!");
+							skat.setStichrunde(new Stichrunde(skat));
+							skat.getStichrunde().setAmZug(gewinner);
 							skat.entsperreEingabe();
+							gui.updateUI();
 						}
 	    			});
 	    			t.setRepeats(false);

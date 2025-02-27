@@ -80,6 +80,10 @@ public class Stichrunde {
 		return this.amZug;
 	}
 	
+	public void setAmZug(Spieler s) {
+		this.amZug = s;
+	}
+	
 	public Karte[] getKartenImStich() {
 		return this.aktuellerStich;
 	}

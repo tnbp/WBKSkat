@@ -63,17 +63,11 @@ public class SkatGUI extends JFrame {
         skatBereich.setPreferredSize(new Dimension(80, 80));
 
         // Punkteanzeige
-        JLabel punkteAnzeige = new JLabel("Punkte: 0 - 0 - 0", SwingConstants.CENTER);
+        JLabel punkteAnzeige = new JLabel("Punkte: " + skat.getSpieler()[0].getName() + ": 0 - " 
+        		+ skat.getSpieler()[1].getName() +  ": 0 - " 
+        		+ skat.getSpieler()[2].getName() + " : 0", SwingConstants.CENTER);
         punkteAnzeige.setName("punkteAnzeige");
         punkteAnzeige.setFont(new Font("Arial", Font.BOLD, 16));
-
-        /*JButton soundButton = new JButton("Sound abspielen");
-        soundButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                playSound("sounds/KarteSpielen.wav");
-            }
-        });*/
         
         add(handOben, BorderLayout.NORTH);
         add(handLinks, BorderLayout.WEST);
@@ -220,6 +214,9 @@ public class SkatGUI extends JFrame {
     		imStich.setLocation(mitteX, mitteY);
     		imStich.setSize(2*100, 2*146);
     	}
+    	punkteAnzeige.setText(skat.getSpieler()[0].getName() + ": " + PunkteBerechnung.berechnePunkte(skat.getSpieler()[0].getStichStapel()) 
+    		+ " - " + skat.getSpieler()[1].getName() + ": " + PunkteBerechnung.berechnePunkte(skat.getSpieler()[1].getStichStapel()) 
+    		+ " - " + skat.getSpieler()[2].getName() + ": " + PunkteBerechnung.berechnePunkte(skat.getSpieler()[2].getStichStapel()));
 		revalidate();
 		repaint();
     }
