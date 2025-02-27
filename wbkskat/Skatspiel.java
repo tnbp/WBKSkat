@@ -11,6 +11,7 @@ public class Skatspiel {
 	private Stichrunde stichRunde = null;
 	private boolean eingabeGesperrt = false;
 	private SkatController sc;
+	private String spielErgebnis;
 	
 	public Skatspiel(Spielart sp, Spieler[] spieler, Spieler kommtRaus) {
 		this.spielart = sp;
@@ -95,10 +96,13 @@ public class Skatspiel {
 		for (int i = 0; i < 3; i++) {
         	this.spieler[i].getHand().sortiereHand(new Spielart(Kartenfarbe.KREUZ));
         }
+		int gereiztBis = starteReizen();
+		if (gereiztBis == 0) JOptionPane.showMessageDialog(sc.getSkatGUI().getRootPane(), "Pech! Du musst trotzdem spielen.", "KI not found", JOptionPane.WARNING_MESSAGE);
+		else JOptionPane.showMessageDialog(sc.getSkatGUI().getRootPane(), "Bis " + gereiztBis + " gereizt.", "Reizen gewonnen", JOptionPane.WARNING_MESSAGE);
 		String[] spielartOptionen = { "Farbspiel", "Grand", "Null" };
         int spielartWahl = -1;
         while (spielartWahl < 0) {
-        	spielartWahl = JOptionPane.showOptionDialog(null, "Was willst du spielen?", "Spielart wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, spielartOptionen, null);
+        	spielartWahl = JOptionPane.showOptionDialog(sc.getSkatGUI().getRootPane(), "Was willst du spielen?", "Spielart wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, spielartOptionen, null);
         }
         String wieHeisstEr = null;
         int spruchWahl = 0;
@@ -107,7 +111,7 @@ public class Skatspiel {
         switch (spielartWahl) {
         	case 0:
         	while (farbspielWahl < 0) {
-        		farbspielWahl = JOptionPane.showOptionDialog(null, "Welche Farbe soll Trumpf sein?", "Farbe wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, farbspielOptionen, null);
+        		farbspielWahl = JOptionPane.showOptionDialog(sc.getSkatGUI().getRootPane(), "Welche Farbe soll Trumpf sein?", "Farbe wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, farbspielOptionen, null);
         	}
         	wieHeisstEr = farbspielOptionen[farbspielWahl] + " ist angesagt!";
         	spruchWahl = farbspielWahl;
@@ -135,10 +139,10 @@ public class Skatspiel {
         		"7, 9, und Unter, da geht keiner drunter!",
         		"Eine Null gibt immer Contra!"
         };
-        JOptionPane.showMessageDialog(null, skatSprueche[spruchWahl], wieHeisstEr, JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(sc.getSkatGUI().getRootPane(), skatSprueche[spruchWahl], wieHeisstEr, JOptionPane.WARNING_MESSAGE);
         // TODO: Hand, Ouvert, Schneider etc.
         this.spieler[0].setIstAlleinspieler(true);
-        this.spielart = new Spielart(spielartWahl, farbspiel);
+        this.spielart = new Spielart(spielartWahl, farbspiel, gereiztBis, false, false, false, false, 0);
         // sortiere Spieler-Hände
         String alleinspieler = null;
         for (int i = 0; i < 3; i++) {
@@ -154,6 +158,52 @@ public class Skatspiel {
 	
 	public void setSkatController(SkatController sc) {
 		this.sc = sc;
+	}
+	
+	public SkatController getSkatController() {
+		return this.sc;
+	}
+	
+	public boolean nimmSkatAuf(Spieler sp) {
+		if (this.skat[0] == null) return false;
+		if (this.skat[1] == null) return false;
+		sp.getHand().fuegeHinzu(this.skat[0]);
+		sp.getHand().fuegeHinzu(this.skat[1]);
+		this.skat[0] = null;
+		this.skat[1] = null;
+		return true;
+	}
+	
+	public void setSpielErgebnis(String in) {
+		this.spielErgebnis = in;
+	}
+	
+	public String getSpielErgebnis() {
+		return this.spielErgebnis;
+	}
+	
+	public int starteReizen() {
+		// und nun die Lottozahlen:
+		int[] reizWerte = { 
+				18, 20, 22, 23, 24, 27, 30, 33, 35, 36,
+				40, 44, 45, 46, 48, 50, 54, 55, 59, 60,
+				63, 66, 70, 72, 77, 80, 81, 84, 88, 90,
+				96, 99, 100, 108, 110, 117, 120, 121,
+				126, 130, 132, 135, 140, 143, 144, 150,
+				153, 154, 156, 160, 162, 165, 168, 170,
+				176, 180, 187, 192, 198, 204, 216, 240,
+				264
+		};
+		String[] reizenOptionen = { "18", "Nein" };
+		int reizenAuswahl;
+		reizenAuswahl = JOptionPane.showOptionDialog(sc.getSkatGUI().getRootPane(), "Reizen beginnen?", "Reizen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, reizenOptionen, null);
+		if (reizenAuswahl == 1) return 0;
+		for (int i = 1; i < reizWerte.length; i++) {
+			reizenOptionen[0] = String.valueOf(reizWerte[i]);
+			reizenAuswahl = JOptionPane.showOptionDialog(sc.getSkatGUI().getRootPane(), "Gereizt bis " + reizWerte[i - 1] + ". Weiter reizen?", "Reizen", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, reizenOptionen, null);
+			if (reizenAuswahl == 1) return reizWerte[i - 1];
+		}
+		return reizWerte[reizWerte.length - 1];
 	}
 
 }

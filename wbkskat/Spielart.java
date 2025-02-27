@@ -15,9 +15,9 @@ public class Spielart {
 	private boolean hand;
 	private int kontra;
 	
-	public Spielart() {
-		this(99, null);
-	}
+	public static final int FARBSPIEL = 0;
+	public static final int GRAND = 1;
+	public static final int NULLSPIEL = 2;
 	
 	public Spielart(Kartenfarbe trumpf) {
 		this(0, trumpf);
@@ -27,7 +27,10 @@ public class Spielart {
 		this(spielart, trumpf, 18, false, false, false, false, 1);
 	}
 	
-	public Spielart(int spielart, Kartenfarbe trumpf, int gereiztBis, boolean schneiderAngesagt, boolean schwarzAngesagt, boolean ouvert, boolean hand, int kontra) {
+	public Spielart(int spielart, Kartenfarbe trumpf, 
+			int gereiztBis, boolean schneiderAngesagt, 
+			boolean schwarzAngesagt, boolean ouvert, 
+			boolean hand, int kontra) {
 		this.spielArt = spielart;
 		this.trumpfFarbe = trumpf;
 		this.gereiztBis = gereiztBis;
@@ -48,7 +51,7 @@ public class Spielart {
 	
 	public boolean istTrumpf(Karte k) {
 		// Das Nullspiel hat keine Trümpfe.
-		if (this.spielArt == 2) return false;
+		if (this.spielArt == NULLSPIEL) return false;
 		// Buben sind immer Trumpf.
 		if (k.getWert() == Kartenwert.BUBE) return true;
 		// Bei Grand wird trumpfFarbe auf -1 gesetzt.
@@ -76,11 +79,35 @@ public class Spielart {
 			// übersticht k2?
 			if (gewinner.vergleicheWert(k2, this) > 0) gewinner = k2;
 		}
-		if (k2.getFarbe() == k1.getFarbe()) {
+		if (k3.getFarbe() == k1.getFarbe()) {
 			// übersticht k3?
 			if (gewinner.vergleicheWert(k3, this) > 0) gewinner = k3;
 		}
 		return gewinner;
+	}
+	
+	public int getGereiztBis() {
+		return this.gereiztBis;
+	}
+	
+	public boolean getSchneiderAngesagt() {
+		return this.schneiderAngesagt;
+	}
+	
+	public boolean getSchwarzAngesagt() {
+		return this.schwarzAngesagt;
+	}
+	
+	public boolean getOuvert() {
+		return this.ouvert;
+	}
+	
+	public boolean getHandspiel() {
+		return this.hand;
+	}
+	
+	public int getKontra() {
+		return this.kontra;
 	}
 	
 }

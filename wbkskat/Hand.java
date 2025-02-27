@@ -14,11 +14,13 @@ import java.util.ArrayList;
 public class Hand {
 	// ArrayList, die die Karten-Objekte der Hand enthält
 	private ArrayList<Karte> karten;
+	private Karte[] alleKarten;
 	private Spieler besitzer;
 	
 	public Hand(Spieler besitzer) {
 		// die Hand enthält zu Beginn noch keine Karten
 		this.karten = new ArrayList<Karte>();
+		this.alleKarten = new Karte[12];
 		this.besitzer = besitzer;
 	}
 	
@@ -30,20 +32,15 @@ public class Hand {
 		// füge der Hand das Karten-Objekt k hinzu
 		k.setHand(this);
 		this.karten.add(k);
+		for (int i = 0; i < alleKarten.length; i++) {
+			if (alleKarten[i] == null) alleKarten[i] = k;
+		}
 	}
 	
 	public boolean legeAb(Karte k) {
 		// lege eine Karte aus der Hand ab
 		k.setHand(null);
 		return this.karten.remove(k);
-	}
-	
-	public void printAllCards() {
-		// Debug-Funktion: Gib alle Karten der Hand aus
-		for (int i = 0; i < karten.size(); i++) {
-			System.out.print(karten.get(i).getFarbeName() + karten.get(i).getWertName());
-			if (i + 1 < karten.size()) System.out.print(", ");
-		}
 	}
 	
 	public void sortiereHand(Spielart sp) {
@@ -98,5 +95,9 @@ public class Hand {
 	
 	public Spieler getBesitzer() {
 		return this.besitzer;
+	}
+	
+	public Karte[] getZwoelfKarten() {
+		return this.alleKarten;
 	}
 }

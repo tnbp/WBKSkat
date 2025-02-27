@@ -27,7 +27,6 @@ public class Stapel {
 	
 	public Karte zieheKarte() {
 		int i = (int) (Math.random() * (karten.size()));
-		//System.out.println("** DEBUG: karten.size() = " + karten.size() + ", i = " + i);
 		Karte k = this.karten.get(i);
 		this.karten.remove(i);
 		return k;

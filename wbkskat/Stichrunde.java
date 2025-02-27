@@ -8,6 +8,12 @@ public class Stichrunde {
 	
 	public Stichrunde(Skatspiel s) {
 		System.out.println("DEBUG: Stichrunde angefangen!");
+		if (s.getSpieler()[0].getHand().getKarten().size() == 0) {
+			// Spiel vorbei!
+			s.getSkatController().beendeSkatspiel();
+			s.setStichrunde(null);
+			return;
+		}
 		this.s = s;
 		this.aktuellerStich = new Karte[3];
 		this.karteGespieltVon = new Spieler[3];
