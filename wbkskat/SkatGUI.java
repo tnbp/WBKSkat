@@ -139,6 +139,27 @@ public class SkatGUI extends JFrame {
     			centerPanel = null, skatBereich = null;
     	JLayeredPane stichBereich = null;
     	JLabel punkteAnzeige = null;
+    	
+    	//Übergabe an nächsten Spieler (die Rotation habe ich leider nicht geschafft, habe aber auch nicht bedacht, dass die Reihenfolge ja immer neu gesetzt wird...)
+    	//Evtl. erweiterbar auf ein Bild im Hintergrund?
+    	if (skat.getStichrunde() != null && skat.getStichrunde().amZug() != null) {
+    	    JOptionPane.showMessageDialog(
+    	            this,
+    	            
+    	            skat.getStichrunde().amZug().getName() + ", du bist am Zug!",
+    	            "Spielerwechsel",
+    	            JOptionPane.INFORMATION_MESSAGE
+    	        ); }
+    	/*Ich dachte, man könnte genauso ein POP-UP nach dem Stich erscheinen lassen, das sagt, wer den Stich gewonnen hat und die neue Runde einläutet
+    	 * 
+    	 * if (skat.getStichrunde() != null && skat.getStichrunde().getGewinner() != null) {
+    	    JOptionPane.showMessageDialog(
+    	            this, 
+    	            skat.getStichrunde().getGewinner().getName() + " hat den Stich gewonnen. Nächste Runde!",
+    	            "Stich gewonnen",
+    	            JOptionPane.INFORMATION_MESSAGE
+    	    );
+    	}*/
     	for (int i = 0; i < frameElemente.length; i++) {
     		if (frameElemente[i].getName() == "handOben") handOben = (JPanel) frameElemente[i];
     		if (frameElemente[i].getName() == "handLinks") handLinks = (JPanel) frameElemente[i];
@@ -173,6 +194,7 @@ public class SkatGUI extends JFrame {
                 if (skat.getSpieler()[i].getPosition() == Position.VIER) handRechts.add(cardButton);
                 if (skat.getSpieler()[i].getPosition() == Position.ZWOELF) handOben.add(cardButton);
         	}
+       
         }
         Karte skat1 = skat.getSkat()[0];
         Karte skat2 = skat.getSkat()[1];
@@ -217,8 +239,9 @@ public class SkatGUI extends JFrame {
     	punkteAnzeige.setText(skat.getSpieler()[0].getName() + ": " + PunkteBerechnung.berechnePunkte(skat.getSpieler()[0].getStichStapel()) 
     		+ " - " + skat.getSpieler()[1].getName() + ": " + PunkteBerechnung.berechnePunkte(skat.getSpieler()[1].getStichStapel()) 
     		+ " - " + skat.getSpieler()[2].getName() + ": " + PunkteBerechnung.berechnePunkte(skat.getSpieler()[2].getStichStapel()));
-		revalidate();
+    	revalidate();
 		repaint();
+    
     }
     
     // shamelessly stolen from stackoverflow.com/questions/20959796
