@@ -61,9 +61,9 @@ public class Spieler {
 		this.stichStapel[i+2] = stich[2];
 	}
 	
-	public void drueckeSkat(Karte skat1, Karte skat2) {
-		this.stichStapel[0] = skat1;
-		this.stichStapel[1] = skat2;
+	public void drueckeSkat(Karte skatKarte) {
+		if (this.stichStapel[0] == null) this.stichStapel[0] = skatKarte;
+		else this.stichStapel[1] = skatKarte;
 	}
 	
 	public Position getPosition() {

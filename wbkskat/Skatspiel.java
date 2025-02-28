@@ -10,6 +10,8 @@ public class Skatspiel {
 	private Karte[] skat;
 	private Stichrunde stichRunde = null;
 	private boolean eingabeGesperrt = false;
+	private boolean skatDruecken = false;
+	private int skatKartenGedrueckt = 0;
 	private SkatController sc;
 	private String spielErgebnis;
 	
@@ -140,18 +142,55 @@ public class Skatspiel {
         		"Eine Null gibt immer Contra!"
         };
         JOptionPane.showMessageDialog(sc.getSkatGUI().getRootPane(), skatSprueche[spruchWahl], wieHeisstEr, JOptionPane.WARNING_MESSAGE);
-        // TODO: Hand, Ouvert, Schneider etc.
-        this.spieler[0].setIstAlleinspieler(true);
-        this.spielart = new Spielart(spielartWahl, farbspiel, gereiztBis, false, false, false, false, 0);
-        // sortiere Spieler-Hände
-        String alleinspieler = null;
-        for (int i = 0; i < 3; i++) {
-        	this.spieler[i].getHand().sortiereHand(this.spielart);
-        	if (this.spieler[i].istAlleinspieler()) alleinspieler = this.spieler[i].getName();
+        boolean handWahl = (JOptionPane.showOptionDialog(sc.getSkatGUI().getRootPane(), "Hand-Spiel?", "Spieloptionen...", 
+        		JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Nein", "Klar" }, null) == 1);
+        boolean ouvertWahl = false;
+        if (handWahl) {
+        	ouvertWahl = (JOptionPane.showOptionDialog(sc.getSkatGUI().getRootPane(), "Ouvert?", "Spieloptionen...", 
+            		JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Nein", "Klar" }, null) == 1);
         }
-        String spielBezeichnung = alleinspieler + " spielt ";
+        boolean schneiderAnsagen = false;
+        boolean schwarzAnsagen = false;
+        if (ouvertWahl && spielartWahl != Spielart.NULLSPIEL) {
+        	schneiderAnsagen = true;
+        	schwarzAnsagen = true;
+        }
+        else if (handWahl && spielartWahl != Spielart.NULLSPIEL) {
+        	int ansagen = JOptionPane.showOptionDialog(sc.getSkatGUI().getRootPane(), "Ansagen?", "Spieloptionen...", 
+            		JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Nichts", "Schneider", "Schwarz" }, null);
+        	schneiderAnsagen = (ansagen > 0);
+        	schwarzAnsagen = (ansagen == 2);
+        }
+        this.spieler[0].setIstAlleinspieler(true);
+        // TODO: Kontra
+        int kontra = 0;
+        
+        this.spielart = new Spielart(spielartWahl, farbspiel, gereiztBis, 
+        		handWahl, schneiderAnsagen, schwarzAnsagen, ouvertWahl, kontra);
+        Spieler alleinspieler = null;
+        for (int i = 0; i < 3; i++) {
+        	// sortiere Spieler-Hände
+        	this.spieler[i].getHand().sortiereHand(this.spielart);
+        	if (this.spieler[i].istAlleinspieler()) alleinspieler = this.spieler[i];
+        }
+        String spielBezeichnung = alleinspieler.getName() + " spielt ";
         if (spielartWahl == 0) spielBezeichnung += farbspielOptionen[farbspielWahl];
         else spielBezeichnung += spielartOptionen[spielartWahl];
+        if (!handWahl) {
+        	alleinspieler.getHand().fuegeHinzu(skat[0]);
+        	alleinspieler.getHand().fuegeHinzu(skat[1]);
+        	skat[0] = null;
+        	skat[1] = null;
+        	JOptionPane.showMessageDialog(sc.getSkatGUI().getRootPane(), "Wähle nun zwei Karten, die du ablegen möchtest.", "Karten drücken", JOptionPane.WARNING_MESSAGE);
+        	this.skatDruecken = true;
+        }
+        else {
+        	JOptionPane.showMessageDialog(sc.getSkatGUI().getRootPane(), "Im Handspiel darfst du den Skat nicht aufnehmen, aber die Augen sind deine.", "Skat aufgenommen", JOptionPane.WARNING_MESSAGE);
+        	alleinspieler.drueckeSkat(skat[0]);
+        	alleinspieler.drueckeSkat(skat[1]);
+        	skat[0] = null;
+        	skat[1] = null;
+        }
         this.sc.getSkatGUI().setTitle("Skat-Spiel: " + spielBezeichnung);
         this.sc.getSkatGUI().updateUI();
 	}
@@ -160,7 +199,7 @@ public class Skatspiel {
 		this.sc = sc;
 	}
 	
-	public SkatController getSkatController() {
+	public SkatController getSkatController() {JOptionPane.showMessageDialog(sc.getSkatGUI().getRootPane(), "Pech! Du musst trotzdem spielen.", "KI not found", JOptionPane.WARNING_MESSAGE);
 		return this.sc;
 	}
 	
@@ -204,6 +243,14 @@ public class Skatspiel {
 			if (reizenAuswahl == 1) return reizWerte[i - 1];
 		}
 		return reizWerte[reizWerte.length - 1];
+	}
+	
+	public boolean getSkatDruecken() {
+		return this.skatDruecken;
+	}
+	
+	public void skatGedrueckt() {
+		if (++this.skatKartenGedrueckt == 2) this.skatDruecken = false;
 	}
 
 }

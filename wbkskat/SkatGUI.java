@@ -176,14 +176,18 @@ public class SkatGUI extends JFrame {
         }
         Karte skat1 = skat.getSkat()[0];
         Karte skat2 = skat.getSkat()[1];
-        File skat1Bild = new File("images/" + skat1.getFarbe().name() + skat1.getWert().name() + ".png");
-        File skat2Bild = new File("images/" + skat2.getFarbe().name() + skat2.getWert().name() + ".png");
-        JButton cardButton = erzeugeSkatButton(skat1, true);
-        cardButton.setName("skat1");
-        skatBereich.add(cardButton);
-    	cardButton = erzeugeSkatButton(skat2, true);
-    	cardButton.setName("skat2");
-    	skatBereich.add(cardButton);
+        if (skat1 != null) {
+        	File skat1Bild = new File("images/" + skat1.getFarbe().name() + skat1.getWert().name() + ".png");
+            JButton cardButton = erzeugeSkatButton(skat1, true);
+            cardButton.setName("skat1");
+            skatBereich.add(cardButton);
+        }
+        if (skat2 != null) {
+        	File skat2Bild = new File("images/" + skat2.getFarbe().name() + skat2.getWert().name() + ".png");
+        	JButton cardButton = erzeugeSkatButton(skat2, true);
+        	cardButton.setName("skat2");
+        	skatBereich.add(cardButton);
+        }
     	// Karten im Stich
     	for (int i = 0; i < 3; i++) {
     		if (skat.getStichrunde() == null) break;

@@ -80,6 +80,14 @@ public class SkatController {
 	}
 	
     public void behandleHandKlick(Karte k) {
+    	if (skat.getSkatDruecken()) {
+    		// bei Klick wird eine Karte gedrückt, nicht gespielt
+    		k.getHand().getBesitzer().drueckeSkat(k);
+    		k.getHand().legeAb(k);
+    		skat.skatGedrueckt();
+    		gui.updateUI();
+    		return;
+    	}
     	if (skat.eingabeGesperrt()) return;
     	//System.out.println(k.getFarbe().name()+k.getWert().name());
     	if (skat.getStichrunde() == null) {
