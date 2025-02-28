@@ -26,8 +26,8 @@ public class PunkteBerechnung {
     	}
     	int spielwert = berechneSpielwert(alleinspieler.getHand().getZwoelfKarten(), alleinspieler.getStichStapel(), sp.getSpielart());
     	if (sp.getSpielart().getGereiztBis() > spielwert) {
-    		sp.setSpielErgebnis(alleinspieler.getName() 
-    				+ " hat ÜBERREIZT und deswegen verloren!\n(gereizt bis " + sp.getSpielart().getGereiztBis() + ")");
+    		sp.setSpielErgebnisMeldung(alleinspieler.getName() 
+    				+ " hat ÜBERREIZT!\n(gereizt bis " + sp.getSpielart().getGereiztBis() + ")");
             return false;
     	}
     	if (sp.getSpielart().getSpielArt() == Spielart.NULLSPIEL) return alleinspieler.getStichStapel()[2] == null;

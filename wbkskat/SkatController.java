@@ -58,9 +58,8 @@ public class SkatController {
             System.out.println("Kein Name eingegeben.");
         }
         
-    	this.skat = new Skatspiel(sp, new Spieler[] {S1,S2,S3}, S1);
-    	S1.getHand().sortiereHand(new Spielart(Kartenfarbe.KREUZ));
-    	this.skat.setSkatController(this);
+        beginneSkatspiel(sp, new Spieler[] { S1, S2, S3 }, null);
+        
 	}
 	
 	public void setGUI(SkatGUI gui) {
@@ -150,8 +149,71 @@ public class SkatController {
     	System.out.println("Finger weg vom Skat!");
     }
     
+    public void beginneSkatspiel(Spielart sp, Spieler[] spieler, Spieler kommtRaus) {
+    	if (kommtRaus == null) kommtRaus = spieler[0];
+    	this.skat = new Skatspiel(sp, new Spieler[] { spieler[0], spieler[1], spieler[2]}, kommtRaus);
+    	kommtRaus.getHand().sortiereHand(new Spielart(Kartenfarbe.KREUZ));
+    	this.skat.setSkatController(this);
+    }
+    
     public void beendeSkatspiel() {
-    	System.out.println("ENDE GELÄNDE! SCHICHT IM SCHACHT! RUCKZUCK HÄNGT DER KIEFER TIEFER!");
+    	boolean ergebnis = PunkteBerechnung.bestimmeGewinn(skat);
+    	Spieler alleinspieler = skat.getAlleinspieler();
+    	String spielBeendetMeldung = alleinspieler.getName() + " " + (ergebnis ? "gewinnt" : "verliert") + " das ";
+    	String spielName = "";
+    	switch (skat.getSpielart().getSpielArt()) {
+    		default:
+    		case Spielart.FARBSPIEL:
+    		spielName = "Farbspiel";
+    		break;
+    		
+    		case Spielart.GRAND:
+    		spielName = "Grand";
+    		break;
+    		
+    		case Spielart.NULLSPIEL:
+    		spielName = "Nullspiel";
+    		break;
+    	}
+    	if (skat.getSpielart().getHandspiel()) spielName += " Hand";
+    	if (skat.getSpielart().getOuvert()) spielName += " Ouvert";
+    	if (skat.getSpielart().getSchwarzAngesagt()) spielName += " (Schwarz angesagt)";
+    	else if (skat.getSpielart().getSchneiderAngesagt()) spielName += " (Schneider angesagt)";
+    	if (skat.getSpielart().getSpielArt() != Spielart.NULLSPIEL) spielBeendetMeldung += spielName + " mit " + PunkteBerechnung.berechnePunkte(alleinspieler.getStichStapel()) + " Punkten.";
+    	else spielBeendetMeldung += spielName + ".";
+    	int spielwert = PunkteBerechnung.berechneSpielwert(alleinspieler.getHand().getZwoelfKarten(), alleinspieler.getStichStapel(), skat.getSpielart());
+    	if (!ergebnis) spielwert *= -2; // doppelter Spielwert wird dem Verlierer abgezogen
+    	alleinspieler.aenderePunktestand(spielwert);
+    	if (skat.getSpielErgebnisMeldung() != null) spielBeendetMeldung += " " + skat.getSpielErgebnisMeldung();
+    	int nochEinSpiel = JOptionPane.showOptionDialog(gui.getRootPane(), spielBeendetMeldung, "Spiel beendet", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Noch ein Spiel", "Beenden"}, null);
+    	if (nochEinSpiel == 0) {
+    		Position neuePosition = Position.ZWOELF;
+    		switch (alleinspieler.getPosition()) {
+    			default:
+    			case ZWOELF:
+    			neuePosition = Position.VIER;
+    			break;
+    			
+    			case VIER:
+    			neuePosition = Position.ACHT;
+    			break;
+    			
+    			case ACHT:
+    			neuePosition = Position.ZWOELF;
+    			break;
+    		}
+    		Spieler kommtNeuRaus = null;
+    		for (int i = 0; i < 3; i++) {
+    			if (skat.getSpieler()[i].getPosition() == neuePosition) {
+    				kommtNeuRaus = skat.getSpieler()[i];
+    				break;
+    			}
+    		}
+    		beginneSkatspiel(null, skat.getSpieler(), kommtNeuRaus);
+    	}
+    	else {
+    		System.exit(0);
+    	}
     }
 	
 }

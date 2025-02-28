@@ -13,7 +13,7 @@ public class Skatspiel {
 	private boolean skatDruecken = false;
 	private int skatKartenGedrueckt = 0;
 	private SkatController sc;
-	private String spielErgebnis;
+	private String spielErgebnisMeldung;
 	
 	public Skatspiel(Spielart sp, Spieler[] spieler, Spieler kommtRaus) {
 		this.spielart = sp;
@@ -213,12 +213,12 @@ public class Skatspiel {
 		return true;
 	}
 	
-	public void setSpielErgebnis(String in) {
-		this.spielErgebnis = in;
+	public void setSpielErgebnisMeldung(String in) {
+		this.spielErgebnisMeldung = in;
 	}
 	
-	public String getSpielErgebnis() {
-		return this.spielErgebnis;
+	public String getSpielErgebnisMeldung() {
+		return this.spielErgebnisMeldung;
 	}
 	
 	public int starteReizen() {
@@ -250,7 +250,17 @@ public class Skatspiel {
 	}
 	
 	public void skatGedrueckt() {
-		if (++this.skatKartenGedrueckt == 2) this.skatDruecken = false;
+		if (++this.skatKartenGedrueckt == 2) {
+			this.skatDruecken = false;
+			getAlleinspieler().getHand().sortiereHand(this.spielart);
+		}
+	}
+	
+	public Spieler getAlleinspieler() {
+		for (int i = 0; i < 3; i++) {
+			if (this.spieler[i].istAlleinspieler()) return this.spieler[i];
+		}
+		return null; // sollte nie passieren!
 	}
 
 }

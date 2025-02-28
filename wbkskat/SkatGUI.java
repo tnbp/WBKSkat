@@ -40,9 +40,9 @@ public class SkatGUI extends JFrame {
         JPanel handRechts = new JPanel(new GridLayout(0, 1));
         handRechts.setName("handRechts");
 
-        handOben.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[0].getName()));
-        handLinks.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[2].getName()));
-        handRechts.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[1].getName()));
+        handOben.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[0].getName() + "(" + skat.getSpieler()[0].getPunktestand() + ")"));
+        handLinks.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[2].getName() + "(" + skat.getSpieler()[1].getPunktestand() + ")"));
+        handRechts.setBorder(BorderFactory.createTitledBorder(skat.getSpieler()[1].getName() + "(" + skat.getSpieler()[2].getPunktestand() + ")"));
 
         //  Hände
         handOben.setPreferredSize(new Dimension(800, 150));
