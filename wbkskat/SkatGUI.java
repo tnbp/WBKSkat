@@ -140,6 +140,57 @@ public class SkatGUI extends JFrame {
     	JLayeredPane stichBereich = null;
     	JLabel punkteAnzeige = null;
     	
+    	for (Component c : frameElemente) {
+            switch (c.getName()) {
+                case "handOben":
+                    handOben = (JPanel) c;
+                    break;
+                case "handLinks":
+                    handLinks = (JPanel) c;
+                    break;
+                case "handRechts":
+                    handRechts = (JPanel) c;
+                    break;
+                case "centerPanel":
+                    centerPanel = (JPanel) c;
+                    break;
+                case "punkteAnzeige":
+                    punkteAnzeige = (JLabel) c;
+                    break;
+            }
+        }
+        if (centerPanel != null) {
+            for (Component c : centerPanel.getComponents()) {
+                if ("stichBereich".equals(c.getName())) stichBereich = (JLayeredPane) c;
+                if ("skatBereich".equals(c.getName())) skatBereich = (JPanel) c;
+            }
+        }
+    	
+    	  if (handOben != null) handOben.removeAll();
+    	    if (handLinks != null) handLinks.removeAll();
+    	    if (handRechts != null) handRechts.removeAll();
+    	    if (stichBereich != null) stichBereich.removeAll();
+    	    if (skatBereich != null) skatBereich.removeAll();
+
+    	    for (int i = 0; i < 3; i++) {
+    	        for (Karte karte : skat.getSpieler()[i].getHand().getKarten()) {
+    	            JButton cardButton = erzeugeHandButton(karte, true, skat.getSpieler()[i].getPosition()); // **Rückseite**
+    	            switch (skat.getSpieler()[i].getPosition()) {
+    	                case ACHT:
+    	                    handLinks.add(cardButton);
+    	                    break;
+    	                case VIER:
+    	                    handRechts.add(cardButton);
+    	                    break;
+    	                case ZWOELF:
+    	                    handOben.add(cardButton);
+    	                    break;
+    	            }
+    	        }
+    	    }
+    	    revalidate();
+    	    repaint();
+    	
     	//Übergabe an nächsten Spieler (die Rotation habe ich leider nicht geschafft, habe aber auch nicht bedacht, dass die Reihenfolge ja immer neu gesetzt wird...)
     	//Evtl. erweiterbar auf ein Bild im Hintergrund?
     	if (skat.getStichrunde() != null && skat.getStichrunde().amZug() != null) {
@@ -150,6 +201,33 @@ public class SkatGUI extends JFrame {
     	            "Spielerwechsel",
     	            JOptionPane.INFORMATION_MESSAGE
     	        ); }
+    	 handOben.removeAll();
+    	    handLinks.removeAll();
+    	    handRechts.removeAll();
+    	    
+    	    for (int i = 0; i < 3; i++) {
+    	        for (Karte karte : skat.getSpieler()[i].getHand().getKarten()) {
+    	            boolean verdeckt = skat.getStichrunde() != null && skat.getStichrunde().amZug() != skat.getSpieler()[i];  
+    	            JButton cardButton = erzeugeHandButton(karte, verdeckt, skat.getSpieler()[i].getPosition());
+    	            switch (skat.getSpieler()[i].getPosition()) {
+    	                case ACHT:
+    	                    handLinks.add(cardButton);
+    	                    break;
+    	                case VIER:
+    	                    handRechts.add(cardButton);
+    	                    break;
+    	                case ZWOELF:
+    	                    handOben.add(cardButton);
+    	                    break;
+    	            }
+    	        }
+    	    }
+
+    	    // **Schritt 4: UI erneut aktualisieren**
+    	    revalidate();
+    	    repaint();
+    	
+    	
     	/*Ich dachte, man könnte genauso ein POP-UP nach dem Stich erscheinen lassen, das sagt, wer den Stich gewonnen hat und die neue Runde einläutet
     	 * 
     	 * if (skat.getStichrunde() != null && skat.getStichrunde().getGewinner() != null) {
